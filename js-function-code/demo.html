@@ -7,15 +7,15 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <script src="./underscoreStructure.js"></script>
+  <!-- <script src="underscore.1.9.1.js"></script> -->
 </head>
 
 <body>
   <script>
     const arr = [1, 1, 2, 2, 3, 4, 3, 5, 'a', 'A']
     // _.unique(arr)
-    _(arr).unique(function () {
-      console.log(111)
-    });
+    _(arr).unique();
+    console.log(_(arr).chain().unique().map().value())
   </script>
 </body>
 
