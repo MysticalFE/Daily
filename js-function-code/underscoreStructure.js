@@ -5,7 +5,6 @@
       globalThis) ||
     this ||
     {};
-
   const _ = function(obj) {
     //obj 是 _ 的实例
     if (obj instanceof _) return obj;
@@ -13,7 +12,7 @@
     if (!(this instanceof _)) return new _(obj);
     this._wrapped = obj;
   };
-
+  const privateRoot = root._;
   //对 chain 的进一步判断，链式调用会再将之前的流程走一遍，_(obj).chain()
   function chainResult(instance, obj) {
     return instance._chain ? _(obj).chain() : obj;
@@ -63,6 +62,12 @@
     target.push("wo");
     return target;
   };
+
+  _.noConflict = function() {
+    root._ = privateRoot;
+    return this;
+  };
+
   //统一返回 链式调用的 this 实例
   _.chain = function(obj) {
     const instance = _(obj);

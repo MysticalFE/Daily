@@ -12,10 +12,16 @@
 
 <body>
   <script>
+    // const _ = {
+    //   b: '11'
+    // }
+    // const $$ = _.noConflict();
+    // console.log(_.b)
     const arr = [1, 1, 2, 2, 3, 4, 3, 5, 'a', 'A']
-    // _.unique(arr)
-    _(arr).unique();
-    console.log(_(arr).chain().unique().map().value())
+
+    _.unique(arr)
+    // _(arr).unique();
+    // console.log(_(arr).chain().unique().map().value())
   </script>
 </body>
 
