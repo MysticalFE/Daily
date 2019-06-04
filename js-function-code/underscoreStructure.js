@@ -68,6 +68,24 @@
     return this;
   };
 
+  //rest参数， es5实现es6中 ...rest 剩余参数
+  _.restArguments = function(func) {
+    const startIndex = func.length - 1; //rest参数索引
+    return function() {
+      const length = arguments.length - startIndex, //rest数组长度
+        rest = Array(length);
+      for (let i = 0; i < length; i++) {
+        rest[i] = arguments[i + startIndex]; //rest参数成员变量
+      }
+      const args = Array(startIndex + 1); //func传入的参数数组集合
+      for (let i = 0; i < startIndex; i++) {
+        args[i] = arguments[i]; //除rest以外的参数
+      }
+      args[startIndex] = rest;
+      return func.apply(this, args); //this指向当前 restArguments  调用的参数(1,2,3,4,5)
+    };
+  };
+
   //统一返回 链式调用的 this 实例
   _.chain = function(obj) {
     const instance = _(obj);
