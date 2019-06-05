@@ -5,6 +5,9 @@
       globalThis) ||
     this ||
     {};
+  const objProto = Object.prototype;
+  const toSring = objProto.toString;
+  const Ctor = function() {};
   const _ = function(obj) {
     //obj 是 _ 的实例
     if (obj instanceof _) return obj;
@@ -19,7 +22,11 @@
   }
 
   _.isArray = function(arr) {
-    return Object.prototype.toString.call(arr) === "[object Array]";
+    return Arrray.isArray || toString.call(arr) === "[object Array]";
+  };
+
+  _.isObject = function(obj) {
+    return toSring.call(obj) === "[object Object]";
   };
 
   //obj 所有可枚举的属性方法集合
@@ -86,6 +93,15 @@
     };
   };
 
+  //Object.create() polyfill
+  const baseCreate = function(proto) {
+    if (!_.isObject(proto)) return;
+    if (Object.create) return Object.create(proto); //判断是否支持Object.create 方法
+    Ctor.prototype = proto;
+    const newProto = new Ctor();
+    Ctor.prototype = null; //因为Ctor是全局变量，这一步是将上面定义函数原型设置为null，不影响其他定义的方法使用该全局变量
+    return newProto;
+  };
   //统一返回 链式调用的 this 实例
   _.chain = function(obj) {
     const instance = _(obj);
