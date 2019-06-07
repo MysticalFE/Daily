@@ -22,7 +22,7 @@
   }
 
   _.isArray = function(arr) {
-    return Arrray.isArray || toString.call(arr) === "[object Array]";
+    return Array.isArray || toString.call(arr) === "[object Array]";
   };
 
   _.isObject = function(obj) {
