@@ -108,9 +108,10 @@
       args,
       timeout = null,
       result;
+    //保存上一次回调的时间戳
     let previousTime = 0;
     console.log(`${previousTime}---init`);
-    if (!options) options = {};
+    if (!options && !_.isObject(options)) options = {};
 
     //setTimeout 回调函数
     const later = () => {
@@ -140,6 +141,7 @@
           clearTimeout(timeout);
           timeout = null;
         }
+        //保存上一次回调时间戳的动作这里！！！
         previousTime = now;
         console.log(`打印${previousTime}`);
         result = func.apply(context, args); //调用func,并传递args参数

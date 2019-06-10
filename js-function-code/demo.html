@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div style="height: 3000px"></div>
+  <div style="height: 2000px"></div>
   <script>
     // const _ = {
     //   b: '11'
@@ -37,7 +37,10 @@
     // throttle(2)
     window.onscroll = _.throttle(function (val) {
       console.log(`哈哈哈哈--${val}`);
-    }, 1000)
+    }, 1000, {
+      // leading: false
+      // trailing: false
+    })
   </script>
 </body>
 
