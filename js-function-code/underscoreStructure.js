@@ -93,6 +93,66 @@
     };
   };
 
+  //获取当前时间戳
+  _.now = Date.now || (() => new Date().getTime());
+  /**
+   * fn 节流
+   * func 处理函数
+   * wait 等待时间  最多每搁 wait 毫秒调用一次 func
+   * options
+   * options 解决了两个问题，1.初始化是否马上执行func,默认执行，如禁用，options = {leading: false}
+   * 2.如果想禁止func最后一次调用，options = {trailing: false}  默认执行
+   */
+  _.throttle = function(func, wait, options) {
+    let context,
+      args,
+      timeout = null,
+      result;
+    let previousTime = 0;
+    console.log(`${previousTime}---init`);
+    if (!options) options = {};
+
+    //setTimeout 回调函数
+    const later = () => {
+      previousTime = options.leading === false ? 0 : _.now();
+      console.log(`${previousTime}---later`);
+      timeout = null;
+      result = func.apply(context, args);
+    };
+
+    const throttled = function() {
+      const now = _.now();
+      context = this;
+      args = arguments;
+      //初始化设置leading: false
+      if (!previousTime && options.leading === false) {
+        previousTime = now;
+      }
+      console.log(`${previousTime}---throttled`);
+      console.log(`${now}---now`);
+      //setTimeout 时间间隔
+      const remaining = wait - (now - previousTime);
+      console.log(remaining);
+      // 初始化没有设置leading: false
+      if (remaining <= 0 || remaining > wait) {
+        //如果timeout存在
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previousTime = now;
+        console.log(`打印${previousTime}`);
+        result = func.apply(context, args); //调用func,并传递args参数
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+    return throttled;
+  };
+
+  //fn 防抖
+  _.debounce = function() {};
   //Object.create() polyfill
   const baseCreate = function(proto) {
     if (!_.isObject(proto)) return;
