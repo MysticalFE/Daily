@@ -70,6 +70,7 @@
     return target;
   };
 
+  //为防止与全局已定义好的_变量冲突，定义的方法
   _.noConflict = function() {
     root._ = privateRoot;
     return this;
@@ -93,6 +94,118 @@
     };
   };
 
+  //获取当前时间戳
+  _.now = Date.now || (() => new Date().getTime());
+
+  /**
+   * fn 节流
+   * fn 处理函数
+   * wait 等待时间  最多每搁 wait 毫秒调用一次 func
+   * options
+   * options 解决了两个问题，1.初始化是否马上执行func,默认执行，如禁用，options = {leading: false}
+   * 2.如果想禁止func最后一次调用，options = {trailing: false}  默认执行
+   */
+  _.throttle = function(fn, wait, options) {
+    let context,
+      args,
+      timeout = null,
+      result;
+    //保存上一次回调的时间戳
+    let previousTime = 0;
+    // console.log(`${previousTime}---init`);
+    if (!options && !_.isObject(options)) options = {};
+
+    //setTimeout 回调函数
+    const later = () => {
+      previousTime = options.leading === false ? 0 : _.now();
+      // console.log(`${previousTime}---later`);
+      timeout = null; //清楚定时器
+      result = fn.apply(context, args);
+    };
+
+    const throttled = function() {
+      const now = _.now();
+      context = this;
+      args = arguments;
+      //初始化设置leading: false
+      if (!previousTime && options.leading === false) {
+        previousTime = now;
+      }
+      // console.log(`${previousTime}---throttled`);
+      // console.log(`${now}---now`);
+      //setTimeout 时间间隔
+      const remaining = wait - (now - previousTime);
+      // console.log(remaining);
+      // 初始化没有设置leading: false
+      if (remaining <= 0 || remaining > wait) {
+        //如果timeout存在
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        //保存上一次回调时间戳的动作这里！！！
+        previousTime = now;
+        // console.log(`打印${previousTime}`);
+        result = fn.apply(context, args); //调用fn,并传递args参数
+      } else if (!timeout && options.trailing !== false) {
+        // console.log(`${remaining}---later`);
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+
+    //取消函数节流定时器，如有需要手动调用
+    throttled.cancel = function() {
+      clearTimeout(timeout);
+      previousTime = 0;
+      timeout = context = args = null;
+    };
+    return throttled;
+  };
+
+  /**
+   * fn 防抖
+   * immediate true 初始化立即执行`fn`处理函数
+   * immediate false 初始化在等待wait时间间隔后执行`fn`处理函数
+   */
+  _.debounce = function(fn, wait, immediate) {
+    let timeout = null,
+      context = null,
+      args = null,
+      result = null,
+      previousTime = 0;
+    const later = () => {
+      const lastCallInterval = _.now() - previousTime;
+      console.log(lastCallInterval);
+      //上次回调 时间间隔
+      if (lastCallInterval >= wait) {
+        clearTimeout(timeout);
+        timeout = null;
+        result = fn.apply(context, args);
+      } else {
+        //时间间隔小于指定的wait值，setTimeout继续回调later
+        timeout = setTimeout(later, wait - lastCallInterval);
+      }
+    };
+    const debounced = () => {
+      context = this;
+      args = arguments;
+      previousTime = _.now();
+      //immediate 为true时，立即执行
+      if (!timeout) {
+        immediate
+          ? (result = fn.apply(context, args))
+          : (timeout = setTimeout(later, wait));
+      }
+      return result;
+    };
+    debounced.cancel = function() {
+      clearTimeout(timeout);
+      timeout = null;
+    };
+    return debounced;
+  };
+
   //Object.create() polyfill
   const baseCreate = function(proto) {
     if (!_.isObject(proto)) return;
@@ -102,6 +215,7 @@
     Ctor.prototype = null; //因为Ctor是全局变量，这一步是将上面定义函数原型设置为null，不影响其他定义的方法使用该全局变量
     return newProto;
   };
+
   //统一返回 链式调用的 this 实例
   _.chain = function(obj) {
     const instance = _(obj);
