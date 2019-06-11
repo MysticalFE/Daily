@@ -8,6 +8,7 @@
   <title>Document</title>
   <script src="./underscoreStructure.js"></script>
   <!-- <script src="underscore.1.9.1.js"></script> -->
+  <!-- <script src="./lodash.4.17.11.js"></script> -->
 </head>
 
 <body>
@@ -35,12 +36,18 @@
     //   leading: false
     // })
     // throttle(2)
-    window.onscroll = _.throttle(function (val) {
-      console.log(`哈哈哈哈--${val}`);
-    }, 1000, {
-      // leading: false
-      // trailing: false
-    })
+    // window.onscroll = _.throttle(function (val) {
+    //   console.log(`哈哈哈哈--${val}`);
+    // }, 1000, {
+    //   leading: false
+    //   // trailing: false
+    // })
+
+    // const debounced = _.debounce(function (val) {
+    //   console.log(`哈哈哈哈---${val}`);
+    // }, 1000)
+    // window.onscroll = debounced
+    window.addEventListener('mousemove', _.debounce(() => console.log(new Date().getTime()), 1000), false);
   </script>
 </body>
 
