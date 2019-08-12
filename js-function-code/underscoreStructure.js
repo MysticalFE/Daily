@@ -206,6 +206,16 @@
     return debounced;
   };
 
+  //函数管道组合，pipe(fn1,fn2.....) 自左至右执行
+  _.pipe = function(...fns) {
+    return x => fns.reduce((arg, fn) => fn(arg), x);
+  };
+
+  //函数组合，compose(fn1,fn2.....) 自右至左执行
+  _.compose = function(...fns) {
+    return x => fns.reduceRight((arg, fn) => fn(arg), x);
+  };
+
   //Object.create() polyfill
   const baseCreate = function(proto) {
     if (!_.isObject(proto)) return;
