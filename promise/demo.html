@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <sctipt src="./custom-promise.js"></sctipt>
+    <script src="custom-promise.js"></script>
   </head>
   <body>
     <script>
-      new CustomPromise(() => {
-        console.log(12212);
+      new CustomPromise((resolve, reject) => {
+        console.log(resolve() instanceof CustomPromise);
       });
+      new Promise((resolve, reject) => {
+        console.log(resolve() instanceof Promise);
+      })
+        .then(res => {
+          //then 返回promise对象，链式调用
+        })
+        .then(res => {});
     </script>
   </body>
 </html>
