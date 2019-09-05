@@ -8,6 +8,7 @@ const REJECTED = "rejected";
 
 // Promise的 状态不可逆
 // let p =new Promise(function(resolve, reject) {
+//   console.log(12123234)
 //   resolve('success')
 //   resolve('success2')
 //   reject('reject')
@@ -63,20 +64,48 @@ class CustomPromise {
   //then
   then(onResolved, onRejected) {
     const { status, value } = this;
-    switch (status) {
-      case PENDING:
-        this.resolveQueues.push(onResolved);
-        this.rejectQueues.push(onRejected);
-        break;
-      case RESOLVED:
-        onResolved(value);
-        break;
-      case REJECTED:
-        onRejected(value);
-        break;
-    }
+    //链式调用，then方法返回当前 CustomPromise 实例对象
+    return new CustomPromise((onResolvedNext, onRejectedNext) => {
+      switch (status) {
+        case PENDING:
+          this.resolveQueues.push(resolved);
+          this.rejectQueues.push(rejected);
+          break;
+        case RESOLVED:
+          resolved(value);
+          break;
+        case REJECTED:
+          rejected(value);
+          break;
+      }
+      const resolved = value => {
+        //判断当前返回的resolved参数是常值，还是return出来的函数
+        if (!isFunc(onResolved)) {
+          onResolvedNext(value);
+        } else {
+          const result = onResolved(value);
+          //如果result返回的是一个CustomPromise实例对象，要等其状态改变后在执行下一个回调
+          //否则直接传入到下一个then回调，并马上执行
+          result instanceof CustomPromise
+            ? result.then(onResolvedNext, onRejectedNext)
+            : onResolvedNext(result);
+        }
+      };
 
-    return new CustomPromise((onResolved, onRejected) => {});
+      const rejected = err => {
+        //判断当前返回的resolved参数是常值，还是return出来的函数
+        if (!isFunc(onRejected)) {
+          onRejectedNext(err);
+        } else {
+          const result = onRejected(err);
+          //如果result返回的是一个CustomPromise实例对象，要等其状态改变后在执行下一个回调
+          //否则直接传入到下一个then回调，并马上执行
+          result instanceof CustomPromise
+            ? result.then(onResolvedNext, onRejectedNext)
+            : onRejectedNext(result);
+        }
+      };
+    });
   }
 
   //finally
