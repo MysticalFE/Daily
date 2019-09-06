@@ -9,16 +9,87 @@
   </head>
   <body>
     <script>
-      new CustomPromise((resolve, reject) => {
-        console.log(resolve() instanceof CustomPromise);
+      const p1 = new CustomPromise(resolve => {
+        resolve(2 * 3);
       });
-      new Promise((resolve, reject) => {
-        console.log(resolve() instanceof Promise);
+      const p2 = new CustomPromise(resolve => {
+        resolve(() => "p2");
+      });
+      const p3 = new CustomPromise(resolve => {
+        resolve(p1);
+      });
+      CustomPromise.race([p1, p2, p3]).then(res => {
+        console.log(`${res}---race`);
+      });
+      CustomPromise.all([p1, p2, p3]).then(res => {
+        console.log(`${res}---all`);
+      });
+
+      new CustomPromise((resolve, reject) => {
+        resolve(999);
       })
         .then(res => {
-          //then 返回promise对象，链式调用
+          console.log(`${res}---resolve`);
         })
-        .then(res => {});
+        .finally(() => {
+          console.log(`finally---finally`);
+        });
+
+      new CustomPromise((resolve, reject) => {
+        reject(888);
+      })
+        .catch(err => {
+          console.log(`${err}---reject`);
+        })
+        .finally(() => {
+          console.log(`finally---finally`);
+        });
+
+      // new CustomPromise((resolve, reject) => {
+      //   console.log(1);
+      //   resolve(3);
+      // })
+      //   .then(val => {
+      //     console.log(val, "val");
+      //     return val;
+      //   })
+      //   .then(res => {
+      //     console.log(res, "res");
+      //   });
+
+      // new Promise((resolve, reject) => {
+      //   console.log(1);
+      //   resolve(3);
+      // })
+      //   .then(val => {
+      //     console.log(val, "val");
+      //     return val;
+      //   })
+      //   .then(res => {
+      //     console.log(res, "res");
+      //   });
+
+      // new Promise((resolve, reject) => {
+      //   console.log(1);
+      //   resolve(3);
+      // }).then(val => {
+      //   console.log(val, "val");
+      //   console.log(2313);
+      // });
+      // .then(res => {
+      //   //then 返回promise对象，链式调用
+      // })
+      // .then(res => {});
+
+      //当p2resolve方法传入一个Promise对象，那么p2当前状态由p1状态来决定
+      // const p1 = new Promise(function(resolve, reject) {
+      //   // ...
+      // });
+
+      // const p2 = new Promise(function(resolve, reject) {
+      //   // ...
+      //   resolve(p1);
+      // });
     </script>
   </body>
 </html>
