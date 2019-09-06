@@ -10,15 +10,50 @@
   <body>
     <script>
       new CustomPromise((resolve, reject) => {
-        console.log(resolve() instanceof CustomPromise);
-      });
-      new Promise((resolve, reject) => {
-        console.log(resolve() instanceof Promise);
+        console.log(1);
+        resolve(3);
       })
-        .then(res => {
-          //then 返回promise对象，链式调用
+        .then(val => {
+          console.log(val, "val");
+          return val;
         })
-        .then(res => {});
+        .then(res => {
+          console.log(res, "res");
+        });
+
+      // new Promise((resolve, reject) => {
+      //   console.log(1);
+      //   resolve(3);
+      // })
+      //   .then(val => {
+      //     console.log(val, "val");
+      //     return val;
+      //   })
+      //   .then(res => {
+      //     console.log(res, "res");
+      //   });
+
+      // new Promise((resolve, reject) => {
+      //   console.log(1);
+      //   resolve(3);
+      // }).then(val => {
+      //   console.log(val, "val");
+      //   console.log(2313);
+      // });
+      // .then(res => {
+      //   //then 返回promise对象，链式调用
+      // })
+      // .then(res => {});
+
+      //当p2resolve方法传入一个Promise对象，那么p2当前状态由p1状态来决定
+      const p1 = new Promise(function(resolve, reject) {
+        // ...
+      });
+
+      const p2 = new Promise(function(resolve, reject) {
+        // ...
+        resolve(p1);
+      });
     </script>
   </body>
 </html>

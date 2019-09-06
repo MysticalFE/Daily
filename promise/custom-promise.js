@@ -6,7 +6,7 @@ const PENDING = "pending";
 const RESOLVED = "fulfilled";
 const REJECTED = "rejected";
 
-// Promise的 状态不可逆
+// Promise的 状态不可逆, Promise构造函数内是同步执行，then，catch是异步执行
 // let p =new Promise(function(resolve, reject) {
 //   console.log(12123234)
 //   resolve('success')
@@ -45,17 +45,54 @@ class CustomPromise {
     }
   }
   //对应 resolve 函数回调
-  _resolve(data) {
+  //当p2resolve方法传入一个Promise对象，那么p2当前状态由p1状态来决定，所以需要判断下传入的value类型
+  _resolve(value) {
     if (this.status != PENDING) return; //状态不可逆
-    this.status = RESOLVED;
-    this.value = data;
+    setTimeout(() => {
+      let cb = null;
+      //循环处理经then链式调用的resolve队列
+      const handle = (...args) => {
+        console.log(args);
+        let cb = null;
+        while ((cb = args[1].shift())) {
+          cb(args[0]);
+        }
+      };
+
+      //判断传入的是否CustomPromise对象
+      if (value instanceof CustomPromise) {
+        value.then(
+          value => {
+            this.status = RESOLVED;
+            this.value = value;
+            handle(value, this.resolveQueues);
+          },
+          err => {
+            this.status = REJECTED;
+            this.value = err;
+            handle(err, this.rejectQueues);
+          }
+        );
+      } else {
+        this.status = RESOLVED;
+        this.value = value;
+        handle(value, this.resolveQueues);
+      }
+    }, 0);
   }
 
   //对应 reject 函数回调
   _reject(err) {
-    if (this.status != PENDING) return; //状态不可逆
-    this.status = REJECTED;
-    this.value = err;
+    setTimeout(() => {
+      if (this.status != PENDING) return; //状态不可逆
+      this.status = REJECTED;
+      this.value = err;
+      let cb = null;
+      //循环处理失败队列回调
+      while ((cb = this.rejectQueues.shift())) {
+        cb(err);
+      }
+    }, 0);
   }
 
   //catch
@@ -66,18 +103,6 @@ class CustomPromise {
     const { status, value } = this;
     //链式调用，then方法返回当前 CustomPromise 实例对象
     return new CustomPromise((onResolvedNext, onRejectedNext) => {
-      switch (status) {
-        case PENDING:
-          this.resolveQueues.push(resolved);
-          this.rejectQueues.push(rejected);
-          break;
-        case RESOLVED:
-          resolved(value);
-          break;
-        case REJECTED:
-          rejected(value);
-          break;
-      }
       const resolved = value => {
         //判断当前返回的resolved参数是常值，还是return出来的函数
         if (!isFunc(onResolved)) {
@@ -91,7 +116,6 @@ class CustomPromise {
             : onResolvedNext(result);
         }
       };
-
       const rejected = err => {
         //判断当前返回的resolved参数是常值，还是return出来的函数
         if (!isFunc(onRejected)) {
@@ -105,6 +129,18 @@ class CustomPromise {
             : onRejectedNext(result);
         }
       };
+      switch (status) {
+        case PENDING:
+          this.resolveQueues.push(resolved);
+          this.rejectQueues.push(rejected);
+          break;
+        case RESOLVED:
+          resolved(value);
+          break;
+        case REJECTED:
+          rejected(value);
+          break;
+      }
     });
   }
 
