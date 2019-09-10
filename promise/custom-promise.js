@@ -220,6 +220,13 @@
         });
       });
     }
+
+    //Promise.try
+    static try(cb) {
+      return new CustomPromise((resolve, reject) => {
+        resolve(cb());
+      });
+    }
   }
   root.CustomPromise = CustomPromise;
-})(globalThis);
+})(globalThis || window);
