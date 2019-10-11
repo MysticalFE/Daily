@@ -227,6 +227,29 @@
         resolve(cb());
       });
     }
+
+    //Promise.retry
+
+    static retry(cb, times, delay) {
+      if (!(cb instanceof CustomPromise)) return;
+      return new CustomPromise((resolve, reject) => {
+        const attempt = () => {
+          cb()
+            .then(resolve)
+            .catch(err => {
+              if (times === 0) {
+                reject(err);
+              } else {
+                times--;
+                setTimeout(() => {
+                  attempt();
+                }, delay);
+              }
+            });
+        };
+        attempt();
+      });
+    }
   }
   root.CustomPromise = CustomPromise;
 })(globalThis || window);
