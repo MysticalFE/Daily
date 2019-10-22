@@ -9,8 +9,8 @@ class Observer {
     this.subscribers = [];
   }
 
-  //订阅事件
-  addSubscribe(topic, cb) {
+  //持续订阅事件
+  on(topic, cb) {
     const currentTopic = { topic, cb },
       //every 数组为空时，在一切情况下都会返回 true
       hasContain =
@@ -28,8 +28,19 @@ class Observer {
       : this.subscribers.push(currentTopic);
   }
 
+  //只订阅一次事件
+  once(topic, cb) {
+    const oneTime = () => {
+      //先执行回调，然后清除该事件的对应回调
+      cb.apply(this, arguments);
+      this.off(event);
+    };
+    oneTime.cbName = cb;
+    this.on(topic, oneTime);
+  }
+
   //发布事件，并传入相应的参数
-  publish(topic, ...args) {
+  emit(topic, ...args) {
     // const currentTopic = this.subscribers.filter(item => item.topic === topic);
     this.subscribers.forEach(item => {
       if (item.topic === topic) item.cb.apply(this, args);
@@ -37,7 +48,7 @@ class Observer {
   }
 
   //取消订阅事件
-  removeSubscribe(topic) {
+  off(topic) {
     if (!topic) {
       this.subscribers = [];
     } else {
