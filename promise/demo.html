@@ -1,95 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <script src="custom-promise.js"></script>
-  </head>
-  <body>
-    <script>
-      const p1 = new CustomPromise(resolve => {
-        resolve(2 * 3);
-      });
-      const p2 = new CustomPromise(resolve => {
-        resolve(() => "p2");
-      });
-      const p3 = new CustomPromise(resolve => {
-        resolve(p1);
-      });
-      CustomPromise.race([p1, p2, p3]).then(res => {
-        console.log(`${res}---race`);
-      });
-      CustomPromise.all([p1, p2, p3]).then(res => {
-        console.log(`${res}---all`);
-      });
 
-      new CustomPromise((resolve, reject) => {
-        resolve(999);
-      })
-        .then(res => {
-          console.log(`${res}---resolve`);
-        })
-        .finally(() => {
-          console.log(`finally---finally`);
-        });
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <script src="custom-promise.js"></script>
+</head>
 
-      new CustomPromise((resolve, reject) => {
-        reject(888);
-      })
-        .catch(err => {
-          console.log(`${err}---reject`);
-        })
-        .finally(() => {
-          console.log(`finally---finally`);
-        });
+<body>
+  <script>
+    const timeout = ms => new CustomPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, ms);
+    });
 
-      // new CustomPromise((resolve, reject) => {
-      //   console.log(1);
-      //   resolve(3);
-      // })
-      //   .then(val => {
-      //     console.log(val, "val");
-      //     return val;
-      //   })
-      //   .then(res => {
-      //     console.log(res, "res");
-      //   });
+    const ajax1 = () => timeout(2000).then(() => {
+      console.log('1');
+      return 1;
+    });
 
-      // new Promise((resolve, reject) => {
-      //   console.log(1);
-      //   resolve(3);
-      // })
-      //   .then(val => {
-      //     console.log(val, "val");
-      //     return val;
-      //   })
-      //   .then(res => {
-      //     console.log(res, "res");
-      //   });
+    const ajax2 = () => timeout(1000).then(() => {
+      console.log('2');
+      return 2;
+    });
 
-      // new Promise((resolve, reject) => {
-      //   console.log(1);
-      //   resolve(3);
-      // }).then(val => {
-      //   console.log(val, "val");
-      //   console.log(2313);
-      // });
-      // .then(res => {
-      //   //then 返回promise对象，链式调用
-      // })
-      // .then(res => {});
+    const ajax3 = () => timeout(2000).then(() => {
+      console.log('3');
+      return 3;
+    });
+    CustomPromise.serial([ajax1, ajax2, ajax3]).then(data => {
+      console.log('done');
+      console.log(data); // data 为 [1, 2, 3]
+    });
+    // const p1 = new CustomPromise(resolve => {
+    //   resolve(2 * 3);
+    // });
+    // const p2 = new CustomPromise(resolve => {
+    //   resolve(() => "p2");
+    // });
+    // const p3 = new CustomPromise(resolve => {
+    //   resolve(p1);
+    // });
+    // CustomPromise.race([p1, p2, p3]).then(res => {
+    //   console.log(`${res}---race`);
+    // });
+    // CustomPromise.all([p1, p2, p3]).then(res => {
+    //   console.log(`${res}---all`);
+    // });
 
-      //当p2resolve方法传入一个Promise对象，那么p2当前状态由p1状态来决定
-      // const p1 = new Promise(function(resolve, reject) {
-      //   // ...
-      // });
+    // new CustomPromise((resolve, reject) => {
+    //   resolve(999);
+    // })
+    //   .then(res => {
+    //     console.log(`${res}---resolve`);
+    //   })
+    //   .finally(() => {
+    //     console.log(`finally---finally`);
+    //   });
 
-      // const p2 = new Promise(function(resolve, reject) {
-      //   // ...
-      //   resolve(p1);
-      // });
-    </script>
-  </body>
+    // new CustomPromise((resolve, reject) => {
+    //   reject(888);
+    // })
+    //   .catch(err => {
+    //     console.log(`${err}---reject`);
+    //   })
+    //   .finally(() => {
+    //     console.log(`finally---finally`);
+    //   });
+
+    // new CustomPromise((resolve, reject) => {
+    //   console.log(1);
+    //   resolve(3);
+    // })
+    //   .then(val => {
+    //     console.log(val, "val");
+    //     return val;
+    //   })
+    //   .then(res => {
+    //     console.log(res, "res");
+    //   });
+
+    // new Promise((resolve, reject) => {
+    //   console.log(1);
+    //   resolve(3);
+    // })
+    //   .then(val => {
+    //     console.log(val, "val");
+    //     return val;
+    //   })
+    //   .then(res => {
+    //     console.log(res, "res");
+    //   });
+
+    // new Promise((resolve, reject) => {
+    //   console.log(1);
+    //   resolve(3);
+    // }).then(val => {
+    //   console.log(val, "val");
+    //   console.log(2313);
+    // });
+    // .then(res => {
+    //   //then 返回promise对象，链式调用
+    // })
+    // .then(res => {});
+
+    //当p2resolve方法传入一个Promise对象，那么p2当前状态由p1状态来决定
+    // const p1 = new Promise(function(resolve, reject) {
+    //   // ...
+    // });
+
+    // const p2 = new Promise(function(resolve, reject) {
+    //   // ...
+    //   resolve(p1);
+    // });
+  </script>
+</body>
+
 </html>

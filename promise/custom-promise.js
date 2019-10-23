@@ -250,6 +250,22 @@
         attempt();
       });
     }
+
+    //多个promise实例，串行
+    static serial(arr) {
+      let data = [],
+        sequence = CustomPromise.resolve();
+      arr.forEach(item => {
+        // 第一次的 then 方法用来执行数组中的每个函数，
+        // 第二次的 then 方法接受数组中的函数执行后返回的结果，
+        sequence = sequence.then(item).then(res => {
+          data.push(res);
+          return data;
+        });
+      });
+
+      return sequence;
+    }
   }
   root.CustomPromise = CustomPromise;
 })(globalThis || window);
