@@ -216,6 +216,18 @@
     return x => fns.reduceRight((arg, fn) => fn(arg), x);
   };
 
+  //函数柯里化
+  _.curry = function(fn, arr = []) {
+    return function(...args) {
+      const loopFn = args => {
+        if (args.length === fn.length) return fn(...args);
+        else return curry(fn, args);
+      };
+
+      return loopFn([...arr, ...args]);
+    };
+  };
+
   //Object.create() polyfill
   const baseCreate = function(proto) {
     if (!_.isObject(proto)) return;

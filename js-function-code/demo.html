@@ -1,54 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="./underscoreStructure.js"></script>
+    <!-- <script src="underscore.1.9.1.js"></script> -->
+    <!-- <script src="./lodash.4.17.11.js"></script> -->
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <script src="./underscoreStructure.js"></script>
-  <!-- <script src="underscore.1.9.1.js"></script> -->
-  <!-- <script src="./lodash.4.17.11.js"></script> -->
-</head>
+  <body>
+    <div style="height: 2000px"></div>
+    <script>
+      // function add(a, b, c, d) {
+      //   console.log(a + b + c + d);
+      //   return a + b + c + d;
+      // }
+      // let curryTest = curry(add);
+      //curryTest(1, 2, 3)(4); //返回10
+      //curryTest(1, 2)(4)(3); //返回10
+      //curryTest(1, 2)(3, 4); //返回10
+      //curryTest(1)(2)(3)(4); //返回10
 
-<body>
-  <div style="height: 2000px"></div>
-  <script>
-    // const _ = {
-    //   b: '11'
-    // }
-    // const $$ = _.noConflict();
-    // console.log(_.b)
-    // const arr = [1, 1, 2, 2, 3, 4, 3, 5, 'a', 'A']
+      // const _ = {
+      //   b: '11'
+      // }
+      // const $$ = _.noConflict();
+      // console.log(_.b)
+      // const arr = [1, 1, 2, 2, 3, 4, 3, 5, 'a', 'A']
 
-    // _.unique(arr)
-    // _(arr).unique();
-    // console.log(_(arr).chain().unique().map().value())
+      // _.unique(arr)
+      // _(arr).unique();
+      // console.log(_(arr).chain().unique().map().value())
 
-    // const restTest = _.restArguments(function (a, b, c, rest) {
-    //   console.log(rest);
-    // })
-    // restTest(2, 4, 5, 6, 7, 8, 9, 90, 0)
+      // const restTest = _.restArguments(function (a, b, c, rest) {
+      //   console.log(rest);
+      // })
+      // restTest(2, 4, 5, 6, 7, 8, 9, 90, 0)
 
-    // const throttle = _.throttle(function (val) {
-    //   console.log(`哈哈哈哈--${val}`)
-    // }, 1000, {
-    //   leading: false
-    // })
-    // throttle(2)
-    // window.onscroll = _.throttle(function (val) {
-    //   console.log(`哈哈哈哈--${val}`);
-    // }, 1000, {
-    //   leading: false
-    //   // trailing: false
-    // })
+      // const throttle = _.throttle(function (val) {
+      //   console.log(`哈哈哈哈--${val}`)
+      // }, 1000, {
+      //   leading: false
+      // })
+      // throttle(2)
+      // window.onscroll = _.throttle(function (val) {
+      //   console.log(`哈哈哈哈--${val}`);
+      // }, 1000, {
+      //   leading: false
+      //   // trailing: false
+      // })
 
-    // const debounced = _.debounce(function (val) {
-    //   console.log(`哈哈哈哈---${val}`);
-    // }, 1000)
-    // window.onscroll = debounced
-    window.addEventListener('mousemove', _.debounce(() => console.log(new Date().getTime()), 1000), false);
-  </script>
-</body>
-
+      // const debounced = _.debounce(function (val) {
+      //   console.log(`哈哈哈哈---${val}`);
+      // }, 1000)
+      // window.onscroll = debounced
+      window.addEventListener(
+        "mousemove",
+        _.debounce(() => console.log(new Date().getTime()), 1000),
+        false
+      );
+    </script>
+  </body>
 </html>
