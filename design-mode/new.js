@@ -1,5 +1,3 @@
-import { resolve } from "path";
-
 //new 操作符
 function customNew(func, ...args) {
   const obj = Object.create(null); //创建了一个空对象
@@ -57,3 +55,88 @@ Function.prototype.bind = function() {
 // var alice = new bar("Alice");
 // console.log(obj.name); // Alice
 // console.log(alice); // undefined
+
+//s "bbbb"
+// 'p' => 'pw' => 'w' => 'wk' => 'wke'
+function lengthOfLongestSubstring(s) {
+  // let str = "";
+  // let size = 0;
+  // for (let i = 0; i < s.length; i++) {
+  //   const index = str.indexOf(s[i]);
+  //   // console.log(str);
+  //   if (index == -1) {
+  //     str += s[i];
+  //     //size 取的上次循环中 str.length
+  //     size = size < str.length ? str.length : size;
+  //   } else {
+  //     str = str.slice(index + 1) + s[i];
+  //   }
+  // }
+  // console.log(str);
+  // return size;
+  const map = {};
+  var left = 0;
+
+  return s.split("").reduce((max, v, i) => {
+    left = map[v] >= left ? map[v] + 1 : left;
+    map[v] = i;
+    // console.log(left);
+    return Math.max(max, i - left + 1);
+  }, 0);
+}
+lengthOfLongestSubstring("abcabcbb");
+// lengthOfLongestSubstring("bbbbb");
+// lengthOfLongestSubstring("pwwkew");
+
+//查找所有无重复的字串
+function getAllString(str) {
+  let res = [];
+  for (let i = 0; i <= str.length; i++) {
+    for (let j = i + 1; j <= str.length; j++) {
+      res.push(str.slice(i, j));
+    }
+  }
+
+  res = new Set(res);
+  // console.log(res);
+}
+
+getAllString([1, 2, 3]);
+
+//[1000, 2000, 3000]  每隔一段时间(item)打印相应的item
+function sequence(arr) {
+  arr.reduce((acc, v) => {
+    setTimeout(() => {
+      console.log(v);
+    }, acc);
+    return acc + v;
+  }, arr[0]);
+}
+// sequence([1000, 2000, 3000]);
+
+//数组的组合问题
+//[1,2,3] => [[1,2],[1,3],[2,3]]
+function arrCombins(arr, num) {
+  let res = [];
+  const fn = (temp, _arr, range) => {
+    if (temp.length === range) {
+      res.push(temp);
+    } else {
+      for (let i = 0; i <= _arr.length - range + temp.length; i++) {
+        fn(temp.concat(_arr[i]), _arr.slice(i + 1));
+      }
+    }
+  };
+  if (!num) {
+    const nums = Array.from(Array(arr.length + 1).keys()).slice(1);
+    for (let n = 0; n <= nums.length; n++) {
+      fn([], arr, nums[n]);
+    }
+  } else {
+    fn([], arr, num);
+  }
+
+  console.log(res);
+  return res;
+}
+arrCombins([1, 2, 3], 2);
