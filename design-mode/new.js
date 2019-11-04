@@ -116,14 +116,18 @@ function sequence(arr) {
 
 //数组的组合问题
 //[1,2,3] => [[1,2],[1,3],[2,3]]
+//[1,2,3] => [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
 function arrCombins(arr, num) {
   let res = [];
   const fn = (temp, _arr, range) => {
+    console.log(`temp--${temp}`);
+    console.log(`_arr--${_arr}`);
     if (temp.length === range) {
       res.push(temp);
     } else {
       for (let i = 0; i <= _arr.length - range + temp.length; i++) {
-        fn(temp.concat(_arr[i]), _arr.slice(i + 1));
+        console.log(_arr.length - range + temp.length);
+        fn(temp.concat(_arr[i]), _arr.slice(i + 1), range);
       }
     }
   };
