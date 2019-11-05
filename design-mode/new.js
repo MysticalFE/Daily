@@ -182,3 +182,29 @@ handleArr([
   [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
   10
 ]);
+
+/**
+ * 随机生成一个长度为 10 的整数类型的数组
+ * [2, 10, 3, 4, 8, 11, 10, 11, 20, 30] => [[2,3,4,8], [10,11], [20], [30]]
+ */
+
+function randomArray() {
+  const length = 10,
+    max = 100;
+  let tempObj = {},
+    reslut = [];
+  const randomArr = Array.from({ length }, () => parseInt(Math.random() * max));
+  const sortArr = Array.from(new Set(randomArr)).sort((a, b) => a - b);
+
+  sortArr.map(val => {
+    const restNum = Math.floor(val / 10);
+    if (!tempObj[restNum]) tempObj[restNum] = [];
+    tempObj[restNum].push(val);
+  });
+  // console.log(tempObj);
+  for (let i in tempObj) {
+    reslut.push(tempObj[i]);
+  }
+  console.log(reslut);
+}
+randomArray();
