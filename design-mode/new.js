@@ -56,8 +56,11 @@ Function.prototype.bind = function() {
 // console.log(obj.name); // Alice
 // console.log(alice); // undefined
 
-//s "bbbb"
-// 'p' => 'pw' => 'w' => 'wk' => 'wke'
+/**
+ * 查找最长无重复的字串
+ * //s "bbbb"
+'p' => 'pw' => 'w' => 'wk' => 'wke'
+ */
 function lengthOfLongestSubstring(s) {
   // let str = "";
   // let size = 0;
@@ -88,7 +91,9 @@ lengthOfLongestSubstring("abcabcbb");
 // lengthOfLongestSubstring("bbbbb");
 // lengthOfLongestSubstring("pwwkew");
 
-//查找所有无重复的字串
+/**
+ * 查找所有无重复字符串
+ */
 function getAllString(str) {
   let res = [];
   for (let i = 0; i <= str.length; i++) {
@@ -100,10 +105,11 @@ function getAllString(str) {
   res = new Set(res);
   // console.log(res);
 }
-
 getAllString([1, 2, 3]);
 
-//[1000, 2000, 3000]  每隔一段时间(item)打印相应的item
+/**
+ *[1000, 2000, 3000]  每隔一段时间(item)打印相应的item
+ */
 function sequence(arr) {
   arr.reduce((acc, v) => {
     setTimeout(() => {
@@ -114,9 +120,11 @@ function sequence(arr) {
 }
 // sequence([1000, 2000, 3000]);
 
-//数组的组合问题
-//[1,2,3] => [[1,2],[1,3],[2,3]]
-//[1,2,3] => [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
+/**
+ * 数组的组合问题
+ * [1,2,3] => [[1,2],[1,3],[2,3]]
+ * [1,2,3] => [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
+ */
 function arrCombins(arr, num) {
   let res = [];
   const fn = (temp, _arr, range) => {
@@ -143,4 +151,34 @@ function arrCombins(arr, num) {
   console.log(res);
   return res;
 }
-arrCombins([1, 2, 3], 2);
+// arrCombins([1, 2, 3], 2);
+//arrCombins([1, 2, 3])
+
+/**
+ * 将数组扁平化并去除其中重复数据，最终得到一个升序且不重复的数组
+ * handleArr([[1, 2, 2],[3, 4, 5, 5],[6, 7, 8, 9, [11, 12, [12, 13, [14]]]],10]);
+ */
+
+function handleArr(arr) {
+  const flatArr = arr.flat(Infinity);
+  const setArr = new Set(flatArr);
+  const sortArr = Array.from(setArr).sort((a, b) => a - b);
+  // Array.from(new Set(arr.flat(Infinity))).sort((a, b) => a - b);
+  //
+  //
+  // const flatArr = arr => {
+  //   return arr.reduce((acc, cur) => {
+  //     const temp = Array.isArray(cur) ? flatArr(cur) : [cur];
+  //     acc.push(...temp);
+  //     return acc;
+  //   }, []);
+  // };
+  // return Array.from(new Set(flatArr(arr))).sort((a, b) => a - b);
+  return sortArr;
+}
+handleArr([
+  [1, 2, 2],
+  [3, 4, 5, 5],
+  [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
+  10
+]);
