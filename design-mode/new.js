@@ -191,7 +191,7 @@ handleArr([
 function randomArray() {
   const length = 10,
     max = 100;
-  let tempObj = {},
+  let tempObj = {}, //对象作为hash列表
     reslut = [];
   const randomArr = Array.from({ length }, () => parseInt(Math.random() * max));
   const sortArr = Array.from(new Set(randomArr)).sort((a, b) => a - b);
@@ -205,6 +205,45 @@ function randomArray() {
   for (let i in tempObj) {
     reslut.push(tempObj[i]);
   }
-  console.log(reslut);
+  // console.log(reslut);
 }
 randomArray();
+
+/**
+ * 多个数组的交集
+ * ([1,2,3,4], [2,3,3,4], [3,4,5]) => [3]
+ */
+function intersectionArr(...args) {
+  // let min_arr = arguments[0],
+  //   intersect = [];
+  // //先遍历出数组长度最小的元组，使后面的第一层循环次数最少
+  // for (let i = 0; i < arguments.length; i++) {
+  //   if (min_arr.length > arguments[i].length) {
+  //     min_arr = arguments[i];
+  //   }
+  // }
+  // for (let i = 0; i < min_arr.length; i++) {
+  //   let flag = true;
+  //   for (let j = 0; j < arguments.length; j++) {
+  //     if (!arguments[j].includes(min_arr[i])) {
+  //       flag = false;
+  //       break;
+  //     }
+  //   }
+  //   if (flag) {
+  //     if (!intersect.includes(min_arr[i])) {
+  //       intersect.push(min_arr[i]);
+  //     }
+  //   }
+  // }
+  // console.log(intersect);
+  // return intersect;
+
+  const result = args.reduce((acc, item) => {
+    // console.log(acc);
+    return acc.filter(val => item.includes(val));
+  });
+  console.log(result);
+  return result;
+}
+intersectionArr([1, 2, 3, 4], [2, 3], [3, 4, 5]);
