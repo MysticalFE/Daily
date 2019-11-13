@@ -176,12 +176,14 @@
 
     //Promise.all
     //CustomPromise.all([p1,p2,p3...]) || CustomPromise.all(p1,p2,p3...)
+    //只有reject返回，总的队列就返回reject，中间加一层map处理不管resolve还是catch都会有返回值
     static all() {
-      const args = Array.from(
+      let args = Array.from(
         arguments.length === 1 && Array.isArray(arguments[0])
           ? arguments[0]
           : arguments
       );
+      let args = args.map(item => item.catch(err => err));
       return new CustomPromise((resolve, reject) => {
         let count = 0,
           result = [];
@@ -199,6 +201,7 @@
       });
     }
 
+    //
     //Promise.race
     //CustomPromise队列中优先resolve的就结束
     static race() {
