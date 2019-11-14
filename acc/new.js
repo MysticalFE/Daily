@@ -163,9 +163,10 @@ function handleArr(arr) {
   const flatArr = arr.flat(Infinity);
   const setArr = new Set(flatArr);
   const sortArr = Array.from(setArr).sort((a, b) => a - b);
-  // Array.from(new Set(arr.flat(Infinity))).sort((a, b) => a - b);
+  Array.from(new Set(arr.flat(Infinity))).sort((a, b) => a - b);
   //
   //
+
   // const flatArr = arr => {
   //   return arr.reduce((acc, cur) => {
   //     const temp = Array.isArray(cur) ? flatArr(cur) : [cur];
@@ -174,6 +175,11 @@ function handleArr(arr) {
   //   }, []);
   // };
   // return Array.from(new Set(flatArr(arr))).sort((a, b) => a - b);
+
+  // while (arr.some(Array.isArray)) {
+  //   arr = [].concat(...arr);
+  // }
+  // console.log(arr);
   return sortArr;
 }
 handleArr([
@@ -243,7 +249,117 @@ function intersectionArr(...args) {
     // console.log(acc);
     return acc.filter(val => item.includes(val));
   });
-  console.log(result);
+  // console.log(result);
   return result;
 }
 intersectionArr([1, 2, 3, 4], [2, 3], [3, 4, 5]);
+
+/**
+ * 简单实现数组map方法
+ */
+Array.prototype.myMap = function(fn, context = this) {
+  // console.log(context);
+  const arr = this;
+  let result = [];
+  for (let i = 0; i < arr.length; i++) {
+    result.push(fn.call(context, arr[i], i, arr));
+  }
+  return result;
+};
+// console.log([1, 2, 3].myMap(item => item * 2, [2, 3, 4]));
+
+/**
+ * 简单实现数组reduce方法
+ * accumulator,curValue, curIndex, arr
+ */
+Array.prototype.myReduce = function(fn, initialValue) {
+  const arr = this;
+  let acc = initialValue === undefined ? arr[0] : initialValue;
+  // const startIndex = initialValue === undefined ? 0 : 1;
+  // console.log(initialValue === undefined);
+  for (let i = 0; i < arr.length; i++) {
+    acc = fn(acc, arr[i], i, arr);
+  }
+  return acc;
+};
+// console.log(
+//   [1, 2, 3].myReduce((acc, item) => {
+//     acc += item;
+//     return acc;
+//   }, 0)
+// );
+// var initialValue = 2;
+// var sum = [{ x: 1 }, { x: 2 }, { x: 3 }].myReduce(function(
+//   accumulator,
+//   currentValue
+// ) {
+//   console.log(currentValue);
+//   return accumulator + currentValue.x;
+// },
+// 2);
+
+// console.log(sum); // logs 6
+
+/**
+ * 简单实现数组filter方法
+ */
+Array.prototype.myFilter = function(fn, context = this) {
+  const arr = this;
+  let result = [];
+  for (let i = 0; i < arr.length; i++) {
+    fn.call(context, arr[i], i, arr) && result.push(arr[i]);
+  }
+  return result;
+};
+// console.log([1, 2, 3, 4].myFilter(item => item >= 3));
+
+/**
+ * 简单实现数组indexOf方法
+ */
+Array.prototype.myIndexOf = function(searchElement, startIndex = 0) {
+  const arr = this,
+    len = arr.length;
+  if (startIndex > len) return -1;
+  if (startIndex < 0) startIndex = len - Math.abs(startIndex); //开始索引为负数，从倒数相应的位置开始检索
+  for (let i = startIndex; i < arr.length; i++) {
+    if (arr[i] === searchElement) return i;
+  }
+  return -1;
+};
+//找出指定元素出现的所有位置  【1,2,2,3,4,5,2,5,2]
+function findAllIndex(arr, element) {
+  let result = [];
+  let index = arr.indexOf(element);
+  while (index != -1) {
+    result.push(index);
+    index = arr.indexOf(element, index + 1);
+  }
+  return result;
+}
+// console.log(findAllIndex([1, 2, 2, 3, 4, 5, 2, 5, 2], 2));
+
+/**
+ * 简单实现数组some方法  有一个回调返回true，函数就返回true
+ */
+Array.prototype.mySome = function(fn, context = this) {
+  const arr = this;
+  if (arr.length === 0) return false; //空数组返回false
+  for (let i = 0; i < arr.length; i++) {
+    if (fn.call(context, arr[i], i, arr)) return true;
+  }
+  return false;
+};
+// console.log([1, 2, 3].mySome(item => item === 4));
+
+/**
+ * 简单实现数组every方法   所有回调返回true，函数就返回true
+ */
+Array.prototype.myEvery = function(fn, context = this) {
+  const arr = this;
+  if (arr.length === 0) return true; //空数组返回true
+  for (let i = 0; i < arr.length; i++) {
+    if (!fn.call(context, arr[i], i, arr)) return false;
+  }
+  return true;
+};
+// console.log([1, 2, 3].myEvery(item => item < 2));
