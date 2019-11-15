@@ -363,3 +363,45 @@ Array.prototype.myEvery = function(fn, context = this) {
   return true;
 };
 // console.log([1, 2, 3].myEvery(item => item < 2));
+
+/**
+ * 简单实现数组splice方法
+ * arr.splice(startIndex, count) 从startIndex索引开始，删除count个元素
+ * arr.splice(startIndex, 0, ele1,ele2...) 在arr原startIndex索引位置，插入传入的参数元素
+ * arr.splice(startIndex, count, ele1,ele2...) 从startIndex索引开始，删除count个元素, 再插入传入的参数元素
+ */
+let arr = [1, 2, 3, 4];
+// console.log(arr.splice(1, 1, 6, 7));
+
+Array.prototype.mySplice = function(startIndex, deleteCount, ...nweElements) {
+  const arr = this;
+  let len = arr.length,
+    deleteArr = [];
+  const restLen = len - startIndex;
+
+  //处理startIndex边界
+  if (startIndex < 0) {
+    startIndex = startIndex + len > 0 ? startIndex + len : 0; //负数从 startIndex + len 索引开始，Math.abs(startIndex)大于len的话，从0索引开始
+  } else {
+    startIndex = startIndex > len ? len : startIndex; //startIndex大于len，从len索引开始
+  }
+
+  //处理deleteCount需要删除长度边界
+  if (arguments.length === 1 || deleteCount > restLen) deleteCount = restLen; //deleteCount不传，或者值大于startIndex后的所有元素长度
+  if (deleteCount <= 0) deleteCount = 0; //deleteCount<=0，不删除元素
+
+  for (let i = 0; i < deleteCount; i++) {
+    const index = startIndex + i;
+    // if (arr.indexOf(arr[index]) === index) {
+    //   deleteArr.push(arr[index]);
+    // }
+    if (index in arr) deleteArr.push(arr[index]);
+  }
+  for (let i = 0; i < nweElements.length; i++) {
+    arr[startIndex + i] = nweElements[i];
+  }
+  arr.length = len - deleteArr.length + nweElements.length;
+  console.log(arr);
+  return deleteArr;
+};
+console.log([1, 2, 3].mySplice(2, 0, 5, 6, 7));
