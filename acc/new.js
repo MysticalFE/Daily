@@ -182,12 +182,12 @@ function handleArr(arr) {
   // console.log(arr);
   return sortArr;
 }
-handleArr([
-  [1, 2, 2],
-  [3, 4, 5, 5],
-  [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
-  10
-]);
+// handleArr([
+//   [1, 2, 2],
+//   [3, 4, 5, 5],
+//   [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
+//   10
+// ]);
 
 /**
  * 随机生成一个长度为 10 的整数类型的数组
@@ -373,7 +373,7 @@ Array.prototype.myEvery = function(fn, context = this) {
 let arr = [1, 2, 3, 4];
 // console.log(arr.splice(1, 1, 6, 7));
 
-Array.prototype.mySplice = function(startIndex, deleteCount, ...nweElements) {
+Array.prototype.mySplice = function(startIndex, deleteCount, ...newElements) {
   const arr = this;
   let len = arr.length,
     deleteArr = [];
@@ -390,6 +390,7 @@ Array.prototype.mySplice = function(startIndex, deleteCount, ...nweElements) {
   if (arguments.length === 1 || deleteCount > restLen) deleteCount = restLen; //deleteCount不传，或者值大于startIndex后的所有元素长度
   if (deleteCount <= 0) deleteCount = 0; //deleteCount<=0，不删除元素
 
+  //处理删除元素
   for (let i = 0; i < deleteCount; i++) {
     const index = startIndex + i;
     // if (arr.indexOf(arr[index]) === index) {
@@ -397,11 +398,33 @@ Array.prototype.mySplice = function(startIndex, deleteCount, ...nweElements) {
     // }
     if (index in arr) deleteArr.push(arr[index]);
   }
-  for (let i = 0; i < nweElements.length; i++) {
-    arr[startIndex + i] = nweElements[i];
+
+  //删除移动元素后多余的元素
+  if (deleteCount < newElements.length) {
+    // 删除的元素比新增的元素少，那么后面的元素整体向后挪动
+    for (let i = len - 1; i >= startIndex + deleteCount; i--) {
+      const moveToIndex = i + newElements.length - deleteCount;
+      arr[moveToIndex] = arr[i];
+      // i in arr ? (arr[moveToIndex] = arr[i]) : delete arr[i];
+    }
+  } else {
+    // 删除的元素比新增的元素多，那么后面的元素整体向前挪动
+    for (let i = startIndex + deleteCount; i <= len; i++) {
+      const moveToIndex = i - (deleteCount - newElements.length);
+      arr[moveToIndex] = arr[i];
+      // i in array ? (array[moveToIndex] = array[i]) : delete array[toIndex];
+    }
   }
-  arr.length = len - deleteArr.length + nweElements.length;
-  console.log(arr);
+
+  //插入需要添加的元素
+  for (let i = 0; i < newElements.length; i++) {
+    arr[startIndex + i] = newElements[i];
+  }
+  arr.length = len - deleteArr.length + newElements.length;
+  console.log(arr, "arr");
   return deleteArr;
 };
-console.log([1, 2, 3].mySplice(2, 0, 5, 6, 7));
+console.log([1, 2, 3, 4, 9, 0].mySplice(2, 0));
+console.log([1, 2, 3, 4, 9, 0].mySplice(2, 1));
+console.log([1, 2, 3, 4, 9, 0].mySplice(2, 2, 5, 6, 7));
+console.log([1, 2, 3, 4, 9, 0].mySplice(2, 5, 5, 6, 7));
