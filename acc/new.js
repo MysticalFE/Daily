@@ -7,7 +7,7 @@ function customNew(func, ...args) {
 }
 
 //call实现
-Function.prototype.call = function(context = window) {
+Function.prototype.myCall = function(context) {
   //临时将函数添加到context属性中
   context.fn = this;
   const args = Array.from(arguments).slice(1);
@@ -424,7 +424,53 @@ Array.prototype.mySplice = function(startIndex, deleteCount, ...newElements) {
   console.log(arr, "arr");
   return deleteArr;
 };
-console.log([1, 2, 3, 4, 9, 0].mySplice(2, 0));
-console.log([1, 2, 3, 4, 9, 0].mySplice(2, 1));
-console.log([1, 2, 3, 4, 9, 0].mySplice(2, 2, 5, 6, 7));
-console.log([1, 2, 3, 4, 9, 0].mySplice(2, 5, 5, 6, 7));
+// console.log([1, 2, 3, 4, 9, 0].mySplice(2, 0));
+// console.log([1, 2, 3, 4, 9, 0].mySplice(2, 1));
+// console.log([1, 2, 3, 4, 9, 0].mySplice(2, 2, 5, 6, 7));
+// console.log([1, 2, 3, 4, 9, 0].mySplice(2, 5, 5, 6, 7));
+
+/**
+ * 简易版浅拷贝
+ */
+function shallowClone(obj) {
+  const isObject = obj =>
+    Object.prototype.toString.call(obj) === "[object, Object]";
+  if (!isObject(obj)) return obj;
+  let target = {};
+  if (Array.isArray(obj)) {
+    target = obj.slice();
+  } else {
+    for (let i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        target[i] = obj[i];
+      }
+    }
+  }
+  return target;
+}
+/**
+ * 简易版深拷贝
+ */
+function deepClone(obj) {
+  const isObject = obj =>
+    Object.prototype.toString.call(obj) === "[object Object]";
+  if (!isObject(obj)) return obj;
+  let target = {};
+  if (Array.isArray(obj)) {
+    target = obj.slice();
+  } else {
+    for (let i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        isObject(obj[i])
+          ? (target[i] = deepClone(obj[i]))
+          : (target[i] = obj[i]);
+      }
+    }
+  }
+  return target;
+}
+// const a = { aaa: 1, bbb: { q: { d: 9 } } };
+// const b = deepClone(a);
+// b.bbb.q.d = 4;
+// console.log(a);
+// console.log(b);
