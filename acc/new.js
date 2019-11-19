@@ -512,18 +512,42 @@ function deepClone(obj) {
 // console.log(b);
 
 /**
- * javascript中函数声明和函数表达式是存在区别的，
- * 函数声明在JS解析时进行函数提升，因此在同一个作用域内，不管函数声明在哪里定义，该函数都可以进行调用。
- * 而函数表达式的值是在JS运行时确定，并且在表达式赋值完成后，该函数才能调用。
+ * 精确倒计时
  */
-// var a; //函数声明时，变量提升 undefined
-a(); //此时变量a还没有被赋值，执行的是声明式函数体
-var a = 1;
-var a = function() {
-  console.log(a);
-};
-a(); //此时函数表达式a被赋值完成
-function a() {
-  console.log(a);
+function execSetTimeout(cb, time) {
+  const start = Date.now();
+  let stop = 0;
+  while (true) {
+    stop = Date.now();
+    if (stop - start === time) {
+      cb();
+    } else {
+      break;
+    }
+  }
 }
-a();
+/**
+ * 实现sleep方法
+ */
+//promise
+function sleep(cb, time) {
+  // return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise(resolve => execSetTimeout(resolve, time));
+}
+//async/await
+async function asyncSleep(time) {
+  const wait = await sleep(time);
+  console.log(1);
+}
+//genetator
+function* genetatorSleep(time) {
+  yield new Promise(resolve => setTimeout(resolve, time));
+}
+// console.log(
+//   genetatorSleep(1000)
+//     .next()
+//     .value.then(() => {
+//       console.log(1);
+//     })
+// );
+// console.log(genetatorSleep(1000).next());
