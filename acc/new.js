@@ -521,7 +521,6 @@ function execSetTimeout(cb, time) {
     stop = Date.now();
     if (stop - start === time) {
       cb();
-    } else {
       break;
     }
   }
@@ -530,7 +529,7 @@ function execSetTimeout(cb, time) {
  * 实现sleep方法
  */
 //promise
-function sleep(cb, time) {
+function sleep(time) {
   // return new Promise(resolve => setTimeout(resolve, time));
   return new Promise(resolve => execSetTimeout(resolve, time));
 }
@@ -550,4 +549,6 @@ function* genetatorSleep(time) {
 //       console.log(1);
 //     })
 // );
-// console.log(genetatorSleep(1000).next());
+sleep(1000).then(() => {
+  console.log(111);
+});
