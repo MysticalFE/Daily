@@ -188,7 +188,42 @@ function handleArr(arr) {
 //   [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
 //   10
 // ]);
+/**
+ * 迭代方式实现flatten
+ */
+function iteratorFlatten(arr) {
+  let result = [];
+  while (arr.length) {
+    const value = arr.shift();
+    console.log(arr);
+    if (Array.isArray(value)) {
+      arr.unshift(...value);
+    } else {
+      result.push(value);
+    }
+  }
+  return result;
+}
+/**
+ * 递归方式实现flatten
+ */
+function recursiveFlatten(arr, result = []) {
+  for (let i = 0; i < arr.length; i++) {
+    Array.isArray(arr[i])
+      ? recursiveFlatten(arr[i], result)
+      : result.push(arr[i]);
+  }
+  return result;
+}
 
+// console.log(
+//   recursiveFlatten([
+//     [1, 2, 2],
+//     [3, 4, 5, 5],
+//     [6, 7, 8, 9, [11, 12, [12, 13, [14]]]],
+//     10
+//   ])
+// );
 /**
  * 随机生成一个长度为 10 的整数类型的数组
  * [2, 10, 3, 4, 8, 11, 10, 11, 20, 30] => [[2,3,4,8], [10,11], [20], [30]]
