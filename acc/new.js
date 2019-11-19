@@ -431,10 +431,11 @@ Array.prototype.mySplice = function(startIndex, deleteCount, ...newElements) {
 
 /**
  * 简易版浅拷贝
+ * Object.assign, [].concat(), [].slice(), [...arr]扩展符
  */
 function shallowClone(obj) {
   const isObject = obj =>
-    Object.prototype.toString.call(obj) === "[object, Object]";
+    Object.prototype.toString.call(obj) === "[object Object]";
   if (!isObject(obj)) return obj;
   let target = {};
   if (Array.isArray(obj)) {
