@@ -549,6 +549,62 @@ function* genetatorSleep(time) {
 //       console.log(1);
 //     })
 // );
-sleep(1000).then(() => {
-  console.log(111);
-});
+// sleep(1000).then(() => {
+//   console.log(111);
+// });
+
+/**
+ * (5).add(2).minus(3)
+ * 边界：浮点数的问题  0.2+0.1 = 0.30000000000000004，
+ * Number.MAX_SAFE_INTEGER num的安全极值
+ */
+Number.MAX_SAFE_DIGITS = Number.MAX_SAFE_INTEGER.toString().length - 2;
+Number.prototype.digits = function() {
+  let result = (
+    this.valueOf()
+      .toString()
+      .split(".")[1] || ""
+  ).length;
+  return result > Number.MAX_SAFE_DIGITS ? Number.MAX_SAFE_DIGITS : result;
+};
+Number.prototype.add = function(i = 0) {
+  if (typeof i !== "number") {
+    throw new Error("请输入正确的数字");
+  }
+  const v = this.valueOf();
+  const thisDigits = this.digits();
+  const iDigits = i.digits();
+  const baseNum = Math.pow(10, Math.max(thisDigits, iDigits));
+  const result = (v * baseNum + i * baseNum) / baseNum;
+  if (result > 0) {
+    return result > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER : result;
+  } else {
+    return result < Number.MIN_SAFE_INTEGER ? Number.MIN_SAFE_INTEGER : result;
+  }
+};
+Number.prototype.minus = function(i = 0) {
+  if (typeof i !== "number") {
+    throw new Error("请输入正确的数字");
+  }
+  const v = this.valueOf();
+  const thisDigits = this.digits();
+  const iDigits = i.digits();
+  const baseNum = Math.pow(10, Math.max(thisDigits, iDigits));
+  const result = (v * baseNum - i * baseNum) / baseNum;
+  if (result > 0) {
+    return result > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER : result;
+  } else {
+    return result < Number.MIN_SAFE_INTEGER ? Number.MIN_SAFE_INTEGER : result;
+  }
+};
+
+var a = 1;
+function A() {
+  a = { i: 0, c: 2 };
+  return a;
+}
+var b = ({ c } = A().i = a.d = 2);
+
+console.log(a);
+console.log(b);
+console.log(c);
