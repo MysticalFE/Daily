@@ -608,3 +608,14 @@ var b = ({ c } = A().i = a.d = 2);
 console.log(a);
 console.log(b);
 console.log(c);
+
+//{1:222, 2:123, 5:888}，请把数据处理为如下结构：[222, 123, null, null, 888, null, null, null, null, null, null, null]。
+
+function changeArr(obj) {
+  const arr = Array.from({ length: 12 }, v => null);
+  Object.keys(obj).forEach(key => {
+    arr[key - 1] = obj[key];
+  });
+  return arr;
+}
+console.log(changeArr({ 1: 222, 2: 123, 5: 888 }));
