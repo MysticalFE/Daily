@@ -598,19 +598,9 @@ Number.prototype.minus = function(i = 0) {
   }
 };
 
-var a = 1;
-function A() {
-  a = { i: 0, c: 2 };
-  return a;
-}
-var b = ({ c } = A().i = a.d = 2);
-
-console.log(a);
-console.log(b);
-console.log(c);
-
-//{1:222, 2:123, 5:888}，请把数据处理为如下结构：[222, 123, null, null, 888, null, null, null, null, null, null, null]。
-
+/**
+ * {1:222, 2:123, 5:888}，请把数据处理为如下结构：[222, 123, null, null, 888, null, null, null, null, null, null, null]。
+ */
 function changeArr(obj) {
   const arr = Array.from({ length: 12 }, v => null);
   Object.keys(obj).forEach(key => {
@@ -618,4 +608,136 @@ function changeArr(obj) {
   });
   return arr;
 }
-console.log(changeArr({ 1: 222, 2: 123, 5: 888 }));
+// console.log(changeArr({ 1: 222, 2: 123, 5: 888 }));
+
+/** 
+ * 重点是 队列的构造，如何进行先进先出
+    LazyMan('Tony');
+    // Hi I am Tony
+
+    LazyMan('Tony').sleep(10).eat('lunch');
+    // Hi I am Tony
+    // 等待了10秒...
+    // I am eating lunch
+
+    LazyMan('Tony').eat('lunch').sleep(10).eat('dinner');
+    // Hi I am Tony
+    // I am eating lunch
+    // 等待了10秒...
+    // I am eating diner
+
+    LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(10).eat('junk food');
+    // Hi I am Tony
+    // 等待了5秒...
+    // I am eating lunch
+    // I am eating dinner
+    // 等待了10秒...
+    // I am eating junk food
+*/
+
+class Lazy {
+  constructor(name) {
+    this.queue = [];
+    console.log(`Hi I am ${name}`);
+    this.init.bind(this);
+  }
+  init() {
+    const item = new Promise(resolve => {
+      resolve();
+    }).then(() => {
+      this.run();
+    });
+  }
+  sleep(timer) {
+    const item = () => {
+      setTimeout(() => {
+        console.log(`等待了${timer}秒...`);
+        this.run();
+      }, timer * 1000);
+    };
+    this.queue.push(item);
+    // console.log(this.queue);
+    return this;
+  }
+  sleepFirst(timer) {
+    const item = () => {
+      setTimeout(() => {
+        console.log(`等待了${timer}秒...`);
+        this.run();
+      }, timer * 1000);
+    };
+    this.queue.unshift(item);
+    return this;
+  }
+  eat(name) {
+    const item = () => {
+      console.log(`Hi I am ${name}`);
+      this.run();
+    };
+    this.queue.push(item);
+    return this;
+  }
+  run() {
+    const firstQueueFn = this.queue.shift();
+    firstQueueFn && firstQueueFn();
+  }
+}
+//下面算法是将执行队列的方法抽离了出来，与队列的进出进行了解耦
+class LazyMan {
+  constructor(name) {
+    this.name = name;
+    this.queue = [];
+    console.log(`Hi I am ${name}`);
+
+    setTimeout(this.apply.bind(this));
+  }
+
+  eat(something) {
+    this.queue.push(() => console.log(`I am eating ${something}`));
+    return this;
+  }
+
+  sleep(time) {
+    this.queue.push(async () => {
+      console.log(`等待了${time}秒...`);
+      return new Promise(res => setTimeout(res, time * 1000));
+    });
+    return this;
+  }
+
+  sleepFirst(time) {
+    this.queue.unshift(async () => {
+      console.log(`等待了${time}秒...`);
+      return new Promise(res => setTimeout(res, time * 1000));
+    });
+    return this;
+  }
+
+  async apply() {
+    const queue = this.queue;
+    while (queue.length) {
+      const todo = queue.shift();
+      await todo();
+    }
+  }
+}
+function LazyMan(name) {
+  return new Lazy(name);
+}
+// LazyMan("Tony");
+
+// LazyMan("Tony")
+//   .sleep(10)
+//   .eat("lunch");
+
+// LazyMan("Tony")
+//   .eat("lunch")
+//   .sleep(10)
+//   .eat("dinner");
+
+LazyMan("Tony")
+  .eat("lunch")
+  .eat("dinner")
+  .sleepFirst(5)
+  .sleep(10)
+  .eat("junk food");
