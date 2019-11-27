@@ -683,7 +683,7 @@ class Lazy {
   }
 }
 //下面算法是将执行队列的方法抽离了出来，与队列的进出进行了解耦
-class LazyMan {
+class LazyMan1 {
   constructor(name) {
     this.name = name;
     this.queue = [];
@@ -735,9 +735,26 @@ function LazyMan(name) {
 //   .sleep(10)
 //   .eat("dinner");
 
-LazyMan("Tony")
-  .eat("lunch")
-  .eat("dinner")
-  .sleepFirst(5)
-  .sleep(10)
-  .eat("junk food");
+// LazyMan("Tony")
+//   .eat("lunch")
+//   .eat("dinner")
+//   .sleepFirst(5)
+//   .sleep(10)
+//   .eat("junk food");
+
+/**
+ * 冒泡排序
+ */
+function bubbleSort(arr) {
+  const len = arr.length;
+  for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      if (arr[i] > arr[j]) {
+        const temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+    }
+  }
+  return arr;
+}
