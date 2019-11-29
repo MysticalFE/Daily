@@ -758,3 +758,50 @@ function bubbleSort(arr) {
   }
   return arr;
 }
+
+/**
+ * 快速排序, 找到基准值，分左右两部分，依次递归循环
+ */
+console.time("test");
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  const baseIndex = Math.floor(arr.length / 2);
+  const base = arr.splice(baseIndex, 1)[0];
+  // console.log(base);
+  let left = [],
+    right = [];
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] < base ? left.push(arr[i]) : right.push(arr[i]);
+  }
+  return [...quickSort(left), base, ...quickSort(right)];
+}
+console.log(quickSort([2, 5, 3, 6, 88, 22, 11, 11, 11, 11, 30, 50, 44]));
+console.timeEnd("test");
+
+/**
+ * 快速排序 优化版，分成了三组，left,center,right,处理相同元素性能上会比较快
+ */
+console.time("test1");
+function optimizeQuickSort(arr) {
+  //三路快排
+  if (arr.length == 0) return arr;
+  let left = [],
+    center = [],
+    right = [];
+  const baseIndex = Math.floor(arr.length / 2);
+  const base = arr[baseIndex];
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] < base) {
+      left.push(arr[i]);
+    } else if (arr[i] == base) {
+      center.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  return [...optimizeQuickSort(left), ...center, ...optimizeQuickSort(right)];
+}
+console.log(
+  optimizeQuickSort([2, 5, 3, 6, 88, 22, 11, 11, 11, 11, 30, 50, 44])
+);
+console.timeEnd("test1");
