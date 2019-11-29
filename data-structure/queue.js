@@ -1,16 +1,17 @@
 /**
  * 队列 先进先出，在尾部添加新元素，并从顶部移除元素。最新添加的元素排在队列的末尾
- * push ，unshift
+ * push ，shift
+ * 传入了 @param priority, 顺序队列转变为优先队列，priority越大优先级越高，优先级高的元素在优先级稍低的后面
  */
 class Queue {
   constructor() {
     this.list = [];
   }
-  enqueue(item) {
+  enqueue(item, priority = 0) {
     this.list.push(item);
   }
   dequeue() {
-    this.list.shift();
+    return this.list.shift();
   }
   front() {
     return this.list[0];
@@ -74,3 +75,30 @@ function collect(queues, nums) {
   }
   console.log(nums);
 }
+
+/**
+ * 循环队列,
+ * 相当于将队首和队尾连接起来(并不是真正的串联起来)，删除队首元素，将删除的队首元素添加到队尾，直到指定某个循环结束，删除队首元素，接着循环依次
+ */
+
+function loopQueue(nameList, num = 0) {
+  const queue = new Queue();
+  num = num ? num : Math.random() * 10; //队列需要循环的次数
+  for (let i = 0; i < nameList.length; i++) {
+    queue.enqueue(nameList[i]);
+  }
+  //循环队列
+  while (queue.length() > 1) {
+    for (let i = 0; i < num; i++) {
+      queue.enqueue(queue.dequeue());
+      console.log(queue.list);
+    }
+
+    queue.dequeue();
+  }
+
+  return queue.dequeue(); //最后返回队首元素
+}
+const nums = [1, 2, 3, 4, 5, 6];
+const result = loopQueue(nums);
+console.log(result);
