@@ -868,4 +868,33 @@ function findStrIndex(S, T) {
   if (indexArr.length === 1) return indexArr[0];
   return indexArr;
 }
-console.log(findStrIndex("abcdefghhhhhhfghghgh", "gh"));
+// console.log(findStrIndex("abcdefghhhhhhfghghgh", "gh"));
+
+/** 
+ * 数组旋转
+ * 输入: [1, 2, 3, 4, 5, 6, 7] 和 k = 3
+输出: [5, 6, 7, 1, 2, 3, 4]
+解释:
+向右旋转 1 步: [7, 1, 2, 3, 4, 5, 6]
+向右旋转 2 步: [6, 7, 1, 2, 3, 4, 5]
+向右旋转 3 步: [5, 6, 7, 1, 2, 3, 4]
+*/
+
+function rotateArr1(arr, k) {
+  while (k > 0) {
+    k--;
+    arr = arr.splice(-1, 1).concat(arr);
+  }
+  return arr;
+}
+function rotateArr2(arr, k) {
+  return [...arr.splice(-k), ...arr];
+}
+function rotateArr3(arr, k) {
+  for (let i = 0; i < k; i++) {
+    arr.unshift(arr.pop());
+  }
+  return arr;
+}
+console.log(rotateArr3([1, 2, 3, 4, 5, 6, 7], 3));
+// console.log(rotateArr([-1, -100, 3, 99], 2));
