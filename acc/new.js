@@ -853,3 +853,19 @@ function qsort(A, p = 0, r) {
 
   return A;
 }
+/**
+ * 实现一个字符串匹配算法，从长度为 n 的字符串 S 中，查找是否存在字符串 T，T 的长度是 m，若存在返回所在位置。
+ */
+function findStrIndex(S, T) {
+  const s_len = S.length,
+    t_len = T.length;
+  let indexArr = [];
+  if (s_len < t_len) return -1;
+  for (let i = 0; i < s_len; i++) {
+    if (S.slice(i, i + t_len) === T) indexArr.push(`${i}--${i + t_len}`);
+  }
+  if (indexArr.length === 0) return -1;
+  if (indexArr.length === 1) return indexArr[0];
+  return indexArr;
+}
+console.log(findStrIndex("abcdefghhhhhhfghghgh", "gh"));
