@@ -896,5 +896,85 @@ function rotateArr3(arr, k) {
   }
   return arr;
 }
-console.log(rotateArr3([1, 2, 3, 4, 5, 6, 7], 3));
+// console.log(rotateArr3([1, 2, 3, 4, 5, 6, 7], 3));
 // console.log(rotateArr([-1, -100, 3, 99], 2));
+
+/**
+ * 返回1-10000之间的所有对称数
+ * 121，131，1331
+ */
+function symmetryCollect() {
+  let result = [];
+  for (let i = 0; i < 10000; i++) {
+    const temp = String(i)
+      .split("")
+      .reverse()
+      .join("");
+    if (String(i) === temp && temp.length > 1) result.push(i);
+  }
+  return result;
+}
+// console.log(symmetryCollect());
+
+/** 
+ * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+ * 输入: [0,1,0,3,12]
+  输出: [1,3,12,0,0]
+*/
+
+function handleZaro(nums) {
+  // let j = 0;
+  // for (let i = 0; i < nums.length - j; i++) {
+  //   if (nums[i] === 0) {
+  //     nums.push(0);
+  //     nums.splice(i, 1);
+  //     i--;
+  //     j++;
+  //   }
+  // }
+
+  let count = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] === 0) {
+      count++;
+    } else {
+      nums[i - count] = nums[i];
+      nums[i] = 0;
+    }
+  }
+  return nums;
+}
+// console.log(handleZaro([0, 1, 0, 0, 3, 0, 5, 0, 8, 0, 100, 12]));
+/** 
+ * 函数柯里化
+ * add(1); 			// 1
+* add(1)(2);  	// 3
+* add(1)(2)(3)；// 6
+* add(1)(2, 3); // 6
+add(1, 2)(3); // 6
+add(1, 2, 3); // 6
+*/
+// _.curry = function(fn, arr = []) {
+//   return function(...args) {
+//     const loopFn = args => {
+//       if (args.length === fn.length) return fn(...args);
+//       else return curry(fn, args);
+//     };
+
+//     return loopFn([...arr, ...args]);
+//   };
+// };
+function curry(fn, arr = []) {
+  return function(...args) {
+    console.log(...args);
+    const loopFn = function(args) {
+      if (args.length === fn.length) return fn.call(this, ...args);
+      else return curry.call(this, fn, args);
+    };
+    return loopFn([...arr, ...args]);
+  };
+}
+const add = curry(function(a, b, c = 0) {
+  return a + b + c;
+});
+console.log(add(1));
