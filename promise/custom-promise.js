@@ -1,5 +1,5 @@
-(function(root) {
-  const isFunc = function(fn) {
+(function (root) {
+  const isFunc = function (fn) {
     return Object.prototype.toString.call(fn) === "[object Function]";
   };
   //promise 三种状态
@@ -66,12 +66,12 @@
         //判断传入的是否CustomPromise对象
         if (value instanceof CustomPromise) {
           value.then(
-            value => {
+            (value) => {
               this.status = RESOLVED;
               this.value = value;
               handle(value, this.resolveQueues);
             },
-            err => {
+            (err) => {
               this.status = REJECTED;
               this.value = err;
               handle(err, this.rejectQueues);
@@ -109,7 +109,7 @@
       const { status, value } = this;
       //链式调用，then方法返回当前 CustomPromise 实例对象
       return new CustomPromise((onResolvedNext, onRejectedNext) => {
-        const resolved = value => {
+        const resolved = (value) => {
           //判断当前返回的resolved参数是常值，还是return出来的函数
           if (!isFunc(onResolved)) {
             onResolvedNext(value);
@@ -122,7 +122,7 @@
               : onResolvedNext(result);
           }
         };
-        const rejected = err => {
+        const rejected = (err) => {
           //判断当前返回的resolved参数是常值，还是return出来的函数
           if (!isFunc(onRejected)) {
             onRejectedNext(err);
@@ -154,8 +154,8 @@
     //不管成功与否 都执行then方法
     finally(fn) {
       return this.then(
-        value => CustomPromise.resolve(fn()).then(() => value),
-        reason =>
+        (value) => CustomPromise.resolve(fn()).then(() => value),
+        (reason) =>
           CustomPromise.resolve(fn()).then(() => {
             throw reason;
           })
@@ -166,7 +166,7 @@
     //new 一个新的 CustomPromise 实例并调用 resolve 方法，最后返回。
     static resolve(value) {
       if (value instanceof CustomPromise) return value;
-      return new CustomPromise(resolve => resolve(value));
+      return new CustomPromise((resolve) => resolve(value));
     }
     //同 resolve
     static reject(value) {
@@ -183,18 +183,18 @@
           ? arguments[0]
           : arguments
       );
-      let args = args.map(item => item.catch(err => err));
+      args = args.map((item) => item.catch((err) => err));
       return new CustomPromise((resolve, reject) => {
         let count = 0,
           result = [];
         for (let i = 0; i < args.length; i++) {
           this.resolve(args[i])
-            .then(value => {
+            .then((value) => {
               count++;
               result[i] = value;
               if (count === args.length) resolve(result);
             })
-            .catch(err => {
+            .catch((err) => {
               reject(err);
             });
         }
@@ -212,12 +212,12 @@
       );
 
       return new CustomPromise((resolve, reject) => {
-        args.forEach(item => {
+        args.forEach((item) => {
           this.resolve(item)
-            .then(value => {
+            .then((value) => {
               resolve(value);
             })
-            .catch(err => {
+            .catch((err) => {
               reject(err);
             });
         });
@@ -239,7 +239,7 @@
         const attempt = () => {
           cb()
             .then(resolve)
-            .catch(err => {
+            .catch((err) => {
               if (times === 0) {
                 reject(err);
               } else {
@@ -258,10 +258,10 @@
     static serial(arr) {
       let data = [],
         sequence = CustomPromise.resolve();
-      arr.forEach(item => {
+      arr.forEach((item) => {
         // 第一次的 then 方法用来执行数组中的每个函数，
         // 第二次的 then 方法接受数组中的函数执行后返回的结果，
-        sequence = sequence.then(item).then(res => {
+        sequence = sequence.then(item).then((res) => {
           data.push(res);
           return data;
         });
