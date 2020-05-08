@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { resolve } from 'dns';
 
 /**
  * 
@@ -34,6 +33,11 @@ async function export() {
 function downloadFile(res: any) {
   const title = decodeURIComponent(res.headers['content-disposition'].split(';')[1].split('=')[1]);
   const blob = new Blob([res.data]);
+
+  //csv文件打开中文报错时，采用以下方案
+  // const blob = new Blob(['\ufeff' + res.data], {
+  //   type: 'text/csv;chartset=utf-8'
+  // })
   const downloadUrl = URL.createObjectURL(blob);
 
   let a = document.createElement('a');
