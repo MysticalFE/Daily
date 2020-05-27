@@ -7,7 +7,7 @@ function customNew(func, ...args) {
 }
 
 //call实现
-Function.prototype.myCall = function(context) {
+Function.prototype.myCall = function (context) {
   //临时将函数添加到context属性中
   context.fn = this;
   const args = Array.from(arguments).slice(1);
@@ -18,7 +18,7 @@ Function.prototype.myCall = function(context) {
 };
 
 //apply实现
-Function.prototype.apply = function(context = window) {
+Function.prototype.apply = function (context = window) {
   context.fn = this;
   const result = arguments[1] ? context.fn(...arguments[1]) : context.fn();
   delete context.fn;
@@ -26,7 +26,7 @@ Function.prototype.apply = function(context = window) {
 };
 
 //bind实现
-Function.prototype.bind = function() {
+Function.prototype.bind = function () {
   //a = a.bind(this);
   //this是指a
   const _this = this;
@@ -34,14 +34,14 @@ Function.prototype.bind = function() {
 
   if (typeof _this != "function") throw Error(`${this}必须是函数`);
   //args.bind(this, 1)(2, 3);
-  const resFunc = function() {
+  const resFunc = function () {
     // console.log(...args, "ewqewqewqe");
     // console.log(...arguments, "gfgfdgd");
     return _this.call(...args, ...arguments);
   };
 
   //在new bind之后的构造函数时，因为this指向是不变的，一直指向bind之后的函数对象，这里对bind函数原型还原清空，保持每个操作中this指向当前实例后的对象或者构造函数
-  const temp = function() {};
+  const temp = function () {};
   resFunc.prototype = temp.prototype;
   return resFunc;
 };
@@ -237,7 +237,7 @@ function randomArray() {
   const randomArr = Array.from({ length }, () => parseInt(Math.random() * max));
   const sortArr = Array.from(new Set(randomArr)).sort((a, b) => a - b);
 
-  sortArr.map(val => {
+  sortArr.map((val) => {
     const restNum = Math.floor(val / 10);
     if (!tempObj[restNum]) tempObj[restNum] = [];
     tempObj[restNum].push(val);
@@ -282,7 +282,7 @@ function intersectionArr(...args) {
 
   const result = args.reduce((acc, item) => {
     // console.log(acc);
-    return acc.filter(val => item.includes(val));
+    return acc.filter((val) => item.includes(val));
   });
   // console.log(result);
   return result;
@@ -292,7 +292,7 @@ intersectionArr([1, 2, 3, 4], [2, 3], [3, 4, 5]);
 /**
  * 简单实现数组map方法
  */
-Array.prototype.myMap = function(fn, context = this) {
+Array.prototype.myMap = function (fn, context = this) {
   // console.log(context);
   const arr = this;
   let result = [];
@@ -307,7 +307,7 @@ Array.prototype.myMap = function(fn, context = this) {
  * 简单实现数组reduce方法
  * accumulator,curValue, curIndex, arr
  */
-Array.prototype.myReduce = function(fn, initialValue) {
+Array.prototype.myReduce = function (fn, initialValue) {
   const arr = this;
   let acc = initialValue === undefined ? arr[0] : initialValue;
   // const startIndex = initialValue === undefined ? 0 : 1;
@@ -338,7 +338,7 @@ Array.prototype.myReduce = function(fn, initialValue) {
 /**
  * 简单实现数组filter方法
  */
-Array.prototype.myFilter = function(fn, context = this) {
+Array.prototype.myFilter = function (fn, context = this) {
   const arr = this;
   let result = [];
   for (let i = 0; i < arr.length; i++) {
@@ -351,7 +351,7 @@ Array.prototype.myFilter = function(fn, context = this) {
 /**
  * 简单实现数组indexOf方法
  */
-Array.prototype.myIndexOf = function(searchElement, startIndex = 0) {
+Array.prototype.myIndexOf = function (searchElement, startIndex = 0) {
   const arr = this,
     len = arr.length;
   if (startIndex > len) return -1;
@@ -376,7 +376,7 @@ function findAllIndex(arr, element) {
 /**
  * 简单实现数组some方法  有一个回调返回true，函数就返回true
  */
-Array.prototype.mySome = function(fn, context = this) {
+Array.prototype.mySome = function (fn, context = this) {
   const arr = this;
   if (arr.length === 0) return false; //空数组返回false
   for (let i = 0; i < arr.length; i++) {
@@ -389,7 +389,7 @@ Array.prototype.mySome = function(fn, context = this) {
 /**
  * 简单实现数组every方法   所有回调返回true，函数就返回true
  */
-Array.prototype.myEvery = function(fn, context = this) {
+Array.prototype.myEvery = function (fn, context = this) {
   const arr = this;
   if (arr.length === 0) return true; //空数组返回true
   for (let i = 0; i < arr.length; i++) {
@@ -408,7 +408,7 @@ Array.prototype.myEvery = function(fn, context = this) {
 let arr = [1, 2, 3, 4];
 // console.log(arr.splice(1, 1, 6, 7));
 
-Array.prototype.mySplice = function(startIndex, deleteCount, ...newElements) {
+Array.prototype.mySplice = function (startIndex, deleteCount, ...newElements) {
   const arr = this;
   let len = arr.length,
     deleteArr = [];
@@ -469,7 +469,7 @@ Array.prototype.mySplice = function(startIndex, deleteCount, ...newElements) {
  * Object.assign, [].concat(), [].slice(), [...arr]扩展符
  */
 function shallowClone(obj) {
-  const isObject = obj =>
+  const isObject = (obj) =>
     Object.prototype.toString.call(obj) === "[object Object]";
   if (!isObject(obj)) return obj;
   let target = {};
@@ -488,7 +488,7 @@ function shallowClone(obj) {
  * 简易版深拷贝
  */
 function deepClone(obj) {
-  const isObject = obj =>
+  const isObject = (obj) =>
     Object.prototype.toString.call(obj) === "[object Object]";
   if (!isObject(obj)) return obj;
   let target = {};
@@ -531,7 +531,7 @@ function execSetTimeout(cb, time) {
 //promise
 function sleep(time) {
   // return new Promise(resolve => setTimeout(resolve, time));
-  return new Promise(resolve => execSetTimeout(resolve, time));
+  return new Promise((resolve) => execSetTimeout(resolve, time));
 }
 //async/await
 async function asyncSleep(time) {
@@ -540,7 +540,7 @@ async function asyncSleep(time) {
 }
 //genetator
 function* genetatorSleep(time) {
-  yield new Promise(resolve => setTimeout(resolve, time));
+  yield new Promise((resolve) => setTimeout(resolve, time));
 }
 // console.log(
 //   genetatorSleep(1000)
@@ -559,15 +559,11 @@ function* genetatorSleep(time) {
  * Number.MAX_SAFE_INTEGER num的安全极值
  */
 Number.MAX_SAFE_DIGITS = Number.MAX_SAFE_INTEGER.toString().length - 2;
-Number.prototype.digits = function() {
-  let result = (
-    this.valueOf()
-      .toString()
-      .split(".")[1] || ""
-  ).length;
+Number.prototype.digits = function () {
+  let result = (this.valueOf().toString().split(".")[1] || "").length;
   return result > Number.MAX_SAFE_DIGITS ? Number.MAX_SAFE_DIGITS : result;
 };
-Number.prototype.add = function(i = 0) {
+Number.prototype.add = function (i = 0) {
   if (typeof i !== "number") {
     throw new Error("请输入正确的数字");
   }
@@ -582,7 +578,7 @@ Number.prototype.add = function(i = 0) {
     return result < Number.MIN_SAFE_INTEGER ? Number.MIN_SAFE_INTEGER : result;
   }
 };
-Number.prototype.minus = function(i = 0) {
+Number.prototype.minus = function (i = 0) {
   if (typeof i !== "number") {
     throw new Error("请输入正确的数字");
   }
@@ -602,8 +598,8 @@ Number.prototype.minus = function(i = 0) {
  * {1:222, 2:123, 5:888}，请把数据处理为如下结构：[222, 123, null, null, 888, null, null, null, null, null, null, null]。
  */
 function changeArr(obj) {
-  const arr = Array.from({ length: 12 }, v => null);
-  Object.keys(obj).forEach(key => {
+  const arr = Array.from({ length: 12 }, (v) => null);
+  Object.keys(obj).forEach((key) => {
     arr[key - 1] = obj[key];
   });
   return arr;
@@ -642,7 +638,7 @@ class Lazy {
     this.init.bind(this);
   }
   init() {
-    const item = new Promise(resolve => {
+    const item = new Promise((resolve) => {
       resolve();
     }).then(() => {
       this.run();
@@ -700,7 +696,7 @@ class LazyMan1 {
   sleep(time) {
     this.queue.push(async () => {
       console.log(`等待了${time}秒...`);
-      return new Promise(res => setTimeout(res, time * 1000));
+      return new Promise((res) => setTimeout(res, time * 1000));
     });
     return this;
   }
@@ -708,7 +704,7 @@ class LazyMan1 {
   sleepFirst(time) {
     this.queue.unshift(async () => {
       console.log(`等待了${time}秒...`);
-      return new Promise(res => setTimeout(res, time * 1000));
+      return new Promise((res) => setTimeout(res, time * 1000));
     });
     return this;
   }
@@ -906,10 +902,7 @@ function rotateArr3(arr, k) {
 function symmetryCollect() {
   let result = [];
   for (let i = 0; i < 10000; i++) {
-    const temp = String(i)
-      .split("")
-      .reverse()
-      .join("");
+    const temp = String(i).split("").reverse().join("");
     if (String(i) === temp && temp.length > 1) result.push(i);
   }
   return result;
@@ -965,16 +958,16 @@ add(1, 2, 3); // 6
 //   };
 // };
 function curry(fn, arr = []) {
-  return function(...args) {
+  return function (...args) {
     console.log(...args);
-    const loopFn = function(args) {
+    const loopFn = function (args) {
       if (args.length === fn.length) return fn.call(this, ...args);
       else return curry.call(this, fn, args);
     };
     return loopFn([...arr, ...args]);
   };
 }
-const add = curry(function(a, b, c = 0) {
+const add = curry(function (a, b, c = 0) {
   return a + b + c;
 });
 console.log(add(1));
