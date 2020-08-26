@@ -1,0 +1,73 @@
+@for $i from 12 through 20 {
+  .fs-#{$i} {
+    font-size: $i+px !important;
+  }
+}
+
+@for $i from 0 through 20 {
+  $w: $i * 50;
+
+  .width-#{$w} {
+    width: $i+px !important;
+  }
+}
+
+@for $i from 0 through 10 {
+  $x: $i * 5;
+
+  .mt-#{$x} {
+    margin-top: $x+px !important;
+  }
+
+  .mb-#{$x} {
+    margin-bottom: $x+px !important;
+  }
+
+  .ml-#{$x} {
+    margin-left: $x+px !important;
+  }
+
+  .mr-#{$x} {
+    margin-right: $x+px !important;
+  }
+
+  .mtb-#{$x} {
+    margin-top: $x+px !important;
+    margin-bottom: $x+px !important;
+  }
+
+  .mlr-#{$x} {
+    margin-left: $x+px !important;
+    margin-right: $x+px !important;
+  }
+}
+
+.custom-scrollbar {
+  overflow: auto;
+  overflow-y: overlay !important;
+
+  @supports (scrollbar-width: thin) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color .3s;
+
+    &:hover {
+      scrollbar-color: black transparent;
+    }
+  }
+
+  @supports not (scrollbar-width: thin) {
+    &:not(:hover)::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: rgba(0, 0, 0, .5);
+    }
+  }
+}
