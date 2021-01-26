@@ -17,11 +17,12 @@ document.addEventListener("mousedown", (event) => {
 
   target.style.setProperty("--x", event.clientX - left + "px");
   target.style.setProperty("--y", event.clientY - top + "px");
-  // target.parentElement.style.setProperty("--target-width", target.clientWidth);
-  // target.parentElement.style.setProperty(
-  //   "--target-height",
-  //   target.clientHeight
-  // );
-  // target.parentElement.style.setProperty("--target-left", target.offsetLeft);
-  // target.parentElement.style.setProperty("--target-top", target.offsetTop);
+
+  target.parentElement.style.setProperty("--target-width", target.clientWidth);
+  target.parentElement.style.setProperty(
+    "--target-height",
+    target.clientHeight
+  );
+  target.parentElement.style.setProperty("--target-left", target.offsetLeft);
+  target.parentElement.style.setProperty("--target-top", target.offsetTop);
 });

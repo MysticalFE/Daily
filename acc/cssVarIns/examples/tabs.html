@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tab</title>
+  <style>
+    .tab {
+      position: relative;
+      display: flex;
+      max-width: 414px;
+      justify-content: space-between;
+      border-bottom: 1px solid #717678;
+      background-color: #fff;
+      margin: 30px auto;
+    }
+
+    .tab::before,
+    .tab::after {
+      position: absolute;
+      width: calc(var(--target-width, 0) * 1px);
+      left: calc(var(--target-left, -299) * 1px);
+      color: #2a80eb;
+    }
+
+    .tab[style]::before,
+    .tab[style]::after {
+      content: '';
+    }
+
+    .tab::before {
+      background-color: currentColor;
+      height: calc(var(--target-height) * 1px);
+      mix-blend-mode: overlay;
+    }
+
+    .tab::after {
+      border-bottom: solid;
+      bottom: -2px;
+      transition: left .2s, width .2s;
+    }
+
+    .a {
+      color: #717678;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<script src="../getLocation.js"></script>
+
+<body>
+  <div class="tab">
+    <a href="javascript:" class="tab-item">测试</a>
+    <a href="javascript:" class="tab-item">测试测试</a>
+    <a href="javascript:" class="tab-item">测试测试测试</a>
+    <a href="javascript:" class="tab-item">测试测试测试测试</a>
+  </div>
+</body>
+
+</html>
