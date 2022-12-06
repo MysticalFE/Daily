@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/MysticalFE/learning#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "ip": "^1.1.5"
   }
 }
